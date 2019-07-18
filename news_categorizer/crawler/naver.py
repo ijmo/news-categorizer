@@ -7,21 +7,21 @@ news_id_pattern = r"oid=(\d+)&aid=(\d+)"
 news_title_selector = "#articleTitle"
 news_body_selector = "#articleBodyContents"
 
-news_urls = {"society": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=102&",
+news_urls = {"society": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=102#&date=%2000:00:00&",
                          "pageArgument": "page",
                          "includes": ["#section_body"]},
-             "politics": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=100&",
+             "politics": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=100#&date=%2000:00:00&",
                           "pageArgument": "page",
                           "includes": ["#section_body"]},
-             "economic": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=101&",
+             "economic": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=101#&date=%2000:00:00&",
                           "pageArgument": "page",
                           "includes": ["#section_body"]},
-             "foreign": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=104&",
+             "foreign": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=104#&date=%2000:00:00&",
                          "pageArgument": "page",
                          "includes": ["#section_body"]},
-             "culture": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=103&",
+             "culture": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=103#&date=%2000:00:00&",
                          "pageArgument": "page",
                          "includes": ["#section_body"]},
-             "digital": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=105&",
+             "digital": {"path": "/main/main.nhn?mode=LSD&mid=shm&sid1=105#&date=%2000:00:00&",
                          "pageArgument": "page",
                          "includes": ["#section_body"]}}
