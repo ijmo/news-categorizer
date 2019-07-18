@@ -3,8 +3,10 @@ import requests
 
 class RequestsHTTPClient:
 
-    def __init__(self):
-        self.session = requests.Session()
+    @staticmethod
+    def html_getter():
+        session = requests.Session()
 
-    def get(self, url):
-        return self.session.get(url).text
+        def http_get(url):
+            return session.get(url).text
+        return http_get

@@ -19,15 +19,11 @@ if __name__ == '__main__':
         NewsCrawler(selenium_client, requests_client, naver, 1, stop_event, max_news_count=MAX_COUNT),
         NewsCrawler(requests_client, requests_client, daum, 1, stop_event, max_news_count=MAX_COUNT)
     ]
-    threads = []
 
     for crawler in crawlers:
-        threads.append(threading.Thread(target=crawler.start_crawling))
+        crawler.start()
 
-    for thread in threads:
-        thread.start()
-
-    for thread in threads:
-        thread.join()
+    for crawler in crawlers:
+        crawler.join()
 
     print("\n\n================\n   complete\n================\n")

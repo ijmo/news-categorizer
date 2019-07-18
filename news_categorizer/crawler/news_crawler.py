@@ -7,10 +7,11 @@ from bs4 import BeautifulSoup
 from .. import filedb
 
 
-class NewsCrawler:
+class NewsCrawler(threading.Thread):
     default_encoding = "utf-8"
 
     def __init__(self, http_client_for_list, http_client_for_detail, site, max_depth, stop_event, max_news_count):
+        super().__init__()
         self.http_client_for_list = http_client_for_list
         self.http_client_for_detail = http_client_for_detail
         self.site = site
@@ -37,8 +38,8 @@ class NewsCrawler:
     #     list(map(self.push_to_queue, [category] * len(urls), urls, [depth] * len(urls)))
 
     @staticmethod
-    def fetch_html(url, http_client):
-        return http_client.get(url)
+    def fetch_html(url, http_get):
+        return http_get(url)
 
     def parse_news_id_from_url(self, url):
         return re.findall(self.site.news_id_pattern, url)[0]
@@ -87,7 +88,7 @@ class NewsCrawler:
         except IndexError:
             return None
 
-    def search_urls_in_page(self, category, details):
+    def search_urls_in_page(self, http_get, category, details):
         path = details["path"]
         page_arg = details["pageArgument"]
         include_selectors = details["includes"]
@@ -100,7 +101,7 @@ class NewsCrawler:
             if self.stop_event.wait(0.001):
                 break
             url = base_url + urlencode({page_arg: page_no})
-            soup = BeautifulSoup(self.fetch_html(url, self.http_client_for_list), 'html.parser')
+            soup = BeautifulSoup(self.fetch_html(url, http_get), 'html.parser')
             soup = self.extract_from_soup(soup, include_selectors[0])
             if not soup:
                 break
@@ -109,12 +110,12 @@ class NewsCrawler:
                 news_urls = [self.site.root_url + _path for _path in news_urls]
             with self.lock:
                 self.urls[category] |= set(news_urls)
-            print(category, url, len(news_urls))
+            print(self.site.name, category, url, len(news_urls))
 
             if len(self.urls[category]) >= self.max_news_count:
                 break
 
-    def fetch_news_in_category(self, category):
+    def fetch_news_in_category(self, http_get, category):
         urls = self.urls[category]
 
         for url in urls:
@@ -131,7 +132,7 @@ class NewsCrawler:
                     data["category"].append(category)
                     self.save_news_in_db(news_id, data)
             else:
-                html_text = self.fetch_html(url, self.http_client_for_detail)
+                html_text = self.fetch_html(url, http_get)
                 soup = BeautifulSoup(html_text, 'html.parser')
 
                 news_title, news_body = self.get_title_body_from_soup(soup)
@@ -148,8 +149,8 @@ class NewsCrawler:
             print()
 
     def search_and_fetch_news(self, category, details):
-        self.search_urls_in_page(category, details)
-        self.fetch_news_in_category(category)
+        self.search_urls_in_page(self.http_client_for_list.html_getter(), category, details)
+        self.fetch_news_in_category(self.http_client_for_detail.html_getter(), category)
 
     def start_crawling(self):
         threads = []
@@ -162,3 +163,6 @@ class NewsCrawler:
 
         for thread in threads:
             thread.join()
+
+    def run(self):
+        self.start_crawling()

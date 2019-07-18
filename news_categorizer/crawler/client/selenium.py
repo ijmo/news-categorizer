@@ -15,9 +15,11 @@ class SeleniumHTTPClient:
         options.add_argument('--blink-settings=imagesEnabled=false')
         self.driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
 
-    def get(self, url):
-        global _lock
-        with _lock:
-            self.driver.get(url)
-            response = self.driver.page_source
-        return response
+    def html_getter(self):
+        def http_get(url):
+            global _lock
+            with _lock:
+                self.driver.get(url)
+                response = self.driver.page_source
+            return response
+        return http_get
