@@ -137,9 +137,10 @@ class NewsCrawler(threading.Thread):
             else:
                 html_text = self.fetch_html(url, http_get)
                 soup = BeautifulSoup(html_text, 'html.parser')
+                [s.extract() for s in soup('script')]
 
                 news_title, news_body = self.get_title_body_from_soup(soup)
-                data = {"normalized": False, "category": [category], "title": news_title, "body": news_body}
+                data = {"url": url, "normalized": False, "category": [category], "title": news_title, "body": news_body}
 
                 self.save_news_in_db(news_id, data)
                 # This is expected to be locked, but I have not. Because it doesn't matter.
