@@ -53,5 +53,8 @@ def save(key, data):
     file_path = get_filepath(key)
     dir_path = os.path.dirname(file_path)
     os.makedirs(dir_path, exist_ok=True)
-    with open(file_path, "wt") as json_file:
-        json.dump(data, json_file, indent=2, ensure_ascii=False)
+    global _lock, locks
+    with get_or_create_lock(key):
+        with open(file_path, "wt") as json_file:
+            json.dump(data, json_file, indent=2, ensure_ascii=False)
+    remove_lock(key)
