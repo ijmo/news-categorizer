@@ -100,7 +100,7 @@ class NewsCrawler(threading.Thread):
 
         self.urls[category] = set()
 
-        for page_no in range(1, 3):
+        for page_no in range(1, 999):
             if self.stop_event.wait(0.001):
                 break
             url = base_url + urlencode({page_arg: page_no})
