@@ -42,7 +42,10 @@ class NewsCrawler(threading.Thread):
         return http_get(url)
 
     def parse_news_id_from_url(self, url):
-        return re.findall(self.site.news_id_pattern, url)[0]
+        result = re.findall(self.site.news_id_pattern, url)[0]
+        if type(result) == tuple:
+            result = "".join(result)
+        return result
 
     @staticmethod
     def find_urls(html_text, patterns):

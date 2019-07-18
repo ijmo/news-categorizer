@@ -2,7 +2,7 @@ name = "naver"
 root_url = "https://news.naver.com"
 
 news_url_patterns = [r"/main/read\.nhn\?mode=LSD&amp;mid=shm&amp;sid1=\d+&amp;oid=\d+&amp;aid=\d+"]
-news_id_pattern = r"\d+$"
+news_id_pattern = r"oid=(\d+)&aid=(\d+)"
 
 news_title_selector = "#articleTitle"
 news_body_selector = "#articleBodyContents"
