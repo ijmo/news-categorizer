@@ -8,10 +8,6 @@ from .crawler.client.selenium import SeleniumHTTPClient
 from . import filedb
 
 
-def join_threads():
-    pass
-
-
 if __name__ == '__main__':
     MAX_COUNT = 100
 
